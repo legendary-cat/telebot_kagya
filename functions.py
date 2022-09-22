@@ -33,16 +33,18 @@ def joke():
 
 @bot.message_handler(content_types=['text'])
 def manga(message):
-
     tp = message.content_type
+
+    if tp != 'text':
+        bot.send_message(message.chat.id, "Вы ввели не верных тип данных :(")
+        return
 
     book = message.text.lower()  # сообщение от пользователя
 
-    if tp != 'text':
-        bot.send_message(message.chat.id, "Вы ввели не верных тип данных, попробуйте снова")
-
-    elif book == 'stop':
+    if book == 'stop':
         bot.send_message(message.chat.id, "Значит в другой раз ")
+    elif tp != 'text':
+        bot.send_message(message.chat.id, "Вы ввели не верных тип данных, попробуйте снова")
 
     else:
         try:
@@ -70,12 +72,17 @@ def manga(message):
 def anime(message):
     tp = message.content_type
 
+    if tp != 'text':
+        bot.send_message(message.chat.id, "Вы ввели не верных тип данных :(")
+        return
+
     book = message.text.lower()  # сообщение от пользователя
 
     if book == 'stop':
         bot.send_message(message.chat.id, "Значит в другой раз ")
     elif tp != 'text':
         bot.send_message(message.chat.id, "Вы ввели не верных тип данных, попробуйте снова")
+
     else:
         try:
             anilist = Anilist()
@@ -100,7 +107,7 @@ def anime(message):
             bot.send.message(message.chat.id, "Ой... что-то пошло не так...")
 
 
-@bot.message_handler(content_types=['photo', "text"])
+@bot.message_handler(content_types=['photo', "text", "sticker"])
 def translate(message):
 
     tp = message.content_type
@@ -132,13 +139,18 @@ def translate(message):
         result = reader.readtext(src, detail=0, paragraph=True)
         os.remove(src)
         ################################################################отправка пользователю результатов
-        for line in result:
-            bot.send_message(message.chat.id, line)
+
+        if(len(result) == 0):
+            bot.send_sticker(message.chat.id, 'CAACAgIAAxkBAAIL3GMsT15rXQ99KYBfhRkw-5OR-7KcAAIbAAMvG2EUOnZDNYZz9_IpBA')
+            bot.send_message(message.chat.id, 'К сожалению я не смогла здесь ничего прочитать')
+
+        else:
+            for line in result:
+                bot.send_message(message.chat.id, line)
 
     except Exception as ex:
         print(ex)
         bot.send.message(message.chat.id, "Ой... что-то пошло не так...")
-
 
 
 @bot.message_handler(content_types=['photo', "text"])
@@ -177,9 +189,6 @@ def photo(message, cl):
 
         elif cl == "car":
             target_classes = segment_image.select_target_classes(car=True)  # выбираем только конкретные типы объектов
-
-        elif cl == "bus":
-            target_classes = segment_image.select_target_classes(bus=True)  # выбираем только конкретные типы объектов
 
         output_file = 'end/' + file_info.file_path
 
@@ -256,9 +265,6 @@ def video(message, cl):
 
         elif cl == "carv":
             target_classes = segment_video.select_target_classes(car=True)  # выбираем только конкретные типы объектов
-
-        elif cl == "busv":
-            target_classes = segment_video.select_target_classes(bus=True)  # выбираем только конкретные типы объектов
 
         output_file = 'end/' + file_info.file_path
 
