@@ -9,12 +9,8 @@ import pixellib
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3" #конфликт с видюхой убирает ошибки
 from pixellib.instance import instance_segmentation
 from auth_data import token #токен бота в отдельном файле
-from fuzzywuzzy import fuzz
-from fuzzywuzzy import process
-from config import *
 from AnilistPython import Anilist
 from googletrans import Translator
-from telebot import types
 
 
 bot = telebot.TeleBot(token)
@@ -43,8 +39,6 @@ def manga(message):
 
     if book == 'stop':
         bot.send_message(message.chat.id, "Значит в другой раз ")
-    elif tp != 'text':
-        bot.send_message(message.chat.id, "Вы ввели не верных тип данных, попробуйте снова")
 
     else:
         try:
@@ -80,8 +74,6 @@ def anime(message):
 
     if book == 'stop':
         bot.send_message(message.chat.id, "Значит в другой раз ")
-    elif tp != 'text':
-        bot.send_message(message.chat.id, "Вы ввели не верных тип данных, попробуйте снова")
 
     else:
         try:
